@@ -153,7 +153,8 @@ with open("out.asm", 'w+') as asm_file:
     # Image data
     asm_file.write("\n")
     asm_file.write("image_data:\n")
-    for row_idx in range(480 // stretch):
-        row_start = 0x4000 - (640//stretch) * ((480 // stretch) - row_idx)
+    num_vals = (640//stretch) * (480//stretch)
+    for val_idx in range(num_vals//2):
+        row_start = 0x4000 - num_vals + 2*val_idx
         asm_file.write(f".org {hex(row_start)}\n")
-        asm_file.write(".db " + ", ".join(["0xff"] * (640//stretch)) + '\n')
+        asm_file.write(".db 0xff, 0xff\n")
