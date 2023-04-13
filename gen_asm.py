@@ -9,7 +9,7 @@ with open("out.asm", 'w+') as asm_file:
     asm_file.write("  jmp main\n\n")
     asm_file.write("main:\n")
     asm_file.write("  clr r2\n")  # Using r2 to clear pixel output
-    asm_file.write("  ser r19\n")  # Testing register
+    asm_file.write("  ser r19\n")  # Full register for outputs
     asm_file.write("  out DDRD, r19\n")  # Pins 0-7 for pixel output
     asm_file.write("  sbi DDRB, 0\n")  # Pin 8 for horizontal sync
     asm_file.write("  sbi DDRB, 1\n")  # Pin 9 for vertical sync
@@ -24,7 +24,7 @@ with open("out.asm", 'w+') as asm_file:
     asm_file.write("vga_loop:\n")
 
     # Last part of the previous frame
-    for _ in range(128//cpp - 9):
+    for _ in range(128//cpp - 12):
         asm_file.write("  nop\n")
 
     # Pixel rows
@@ -37,9 +37,9 @@ with open("out.asm", 'w+') as asm_file:
     asm_file.write("pixel_row_inner:\n")
     # 640 pixel visible area
     for _ in range(640//stretch - 1):
-        asm_file.write("  out PORTD, r19\n")  # Write the pixel out
+        asm_file.write("  out PORTD, r18\n")  # Write the pixel out
         asm_file.write("  lpm r18, Z+\n")  # Load the pixel from memory
-    asm_file.write("  out PORTD, r19\n")  # Write the final pixel out
+    asm_file.write("  out PORTD, r18\n")  # Write the final pixel out
     asm_file.write("  nop\n")
     asm_file.write("  nop\n")
     asm_file.write("  nop\n")
