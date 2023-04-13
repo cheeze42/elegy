@@ -132,7 +132,7 @@ with open("out.asm", 'w+') as asm_file:
         asm_file.write("  nop\n")
     # 128 pixel back porch
     asm_file.write("  sbi PORTB, 0\n")  # Stop the horizontal pulse
-    for _ in range(128//cpp - 5):
+    for _ in range(128//cpp - 7 + 2):
         asm_file.write("  nop\n")
     asm_file.write("  dec r16\n")
     asm_file.write("  breq vertical_back_porch_loop_done\n")
@@ -157,5 +157,5 @@ with open("out.asm", 'w+') as asm_file:
     num_vals = (640//stretch) * (480//stretch)
     for val_idx in range(num_vals//2):
         row_start = 0x4000 - num_vals + 2*val_idx
-        asm_file.write(f".org {hex(row_start)}\n")
+        # asm_file.write(f".org {hex(row_start)}\n")
         asm_file.write(".db 0xff, 0xff\n")
