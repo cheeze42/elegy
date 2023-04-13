@@ -164,10 +164,10 @@ with open("out.asm", 'w+') as asm_file:
 
     def get_hex_value(pixel):
         red, green, blue = pixel
-        red = red // 128
-        green = green // 128
-        blue = blue // 128
-        return hex(red + (green << 1) + (blue << 2))
+        red = red // 64
+        green = green // 64
+        blue = blue // 64
+        return hex(red + (green << 2) + (blue << 4))
 
     for y in range(60):
         for x in range(80//2):
