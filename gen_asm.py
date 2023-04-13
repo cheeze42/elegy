@@ -1,3 +1,5 @@
+from PIL import Image
+
 with open("out.asm", 'w+') as asm_file:
     asm_file.write(".device ATMega328P\n")
     asm_file.write(".equ DDRB = 0x04\n")
@@ -157,7 +159,16 @@ with open("out.asm", 'w+') as asm_file:
     asm_file.write("\n")
     asm_file.write("image_data:\n")
     num_vals = (640//stretch) * (480//stretch)
-    for val_idx in range(num_vals//2):
-        row_start = 0x4000 - num_vals + 2*val_idx
-        # asm_file.write(f".org {hex(row_start)}\n")
-        asm_file.write(".db 0xff, 0xff\n")
+    image = Image.open("colorbars.png")
+    pixels = image.load()
+
+    def get_hex_value(pixel):
+        red, green, blue = pixel
+        red = red // 128
+        green = green // 128
+        blue = blue // 128
+        return hex(red + (green << 1) + (blue << 2))
+
+    for y in range(60):
+        for x in range(80//2):
+            asm_file.write(f".db {get_hex_value(pixels[2*x,y])}, {get_hex_value(pixels[2*x+1,y])}\n")
