@@ -56,7 +56,7 @@ with open("out.asm", 'w+') as asm_file:
     asm_file.write("vga_loop:\n")
 
     # Last part of the previous frame
-    for _ in range(120//cpp - 4):
+    for _ in range(120//cpp - 9):
         asm_file.write("  nop\n")
 
     # Pixel rows
@@ -67,8 +67,7 @@ with open("out.asm", 'w+') as asm_file:
     asm_file.write("pixel_row_loop:\n")
     asm_file.write("pixel_row_inner:\n")
     # 640 pixel visible area
-    # Enable SPI
-    for _ in range(160//8):
+    for _ in range(160//8 - 1):
         asm_file.write("  out SPDR, r19\n")  # Write the pixel out
         asm_file.write("  nop\n")
         asm_file.write("  nop\n")
@@ -85,11 +84,26 @@ with open("out.asm", 'w+') as asm_file:
         asm_file.write("  nop\n")
         asm_file.write("  nop\n")
         asm_file.write("  nop\n")
+
+    asm_file.write("  out SPDR, r19\n")  # Write the pixel out
+    asm_file.write("  nop\n")
+    asm_file.write("  nop\n")
+    asm_file.write("  nop\n")
+    asm_file.write("  nop\n")
+    asm_file.write("  nop\n")
+    asm_file.write("  nop\n")
+    asm_file.write("  nop\n")
+    asm_file.write("  nop\n")
+    asm_file.write("  nop\n")
+    asm_file.write("  nop\n")
+    asm_file.write("  nop\n")
+    asm_file.write("  nop\n")
+    asm_file.write("  nop\n")
     asm_file.write("  ldi r20, (1<<MSTR)\n")
     asm_file.write("  out SPCR, r20\n")
     asm_file.write("  cbi PORTB, 3\n")
     # 16 pixel front porch
-    for _ in range(16//cpp - 4):
+    for _ in range(16//cpp - 2):
         asm_file.write("  nop\n")
     # 64 pixel sync pulse
     asm_file.write("  cbi PORTD, 0\n")  # Start the horizontal pulse
