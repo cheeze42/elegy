@@ -82,11 +82,18 @@ with open("out.asm", 'w+') as asm_file:
     # Vertical front porch, along with 80 blank lines
     # First line
     # 640 pixel visible area + 16 pixel front porch
-    asm_file.write("  sbic PINB, 2\n")  # 1/2
-    asm_file.write("  sbi PORTB, 3\n")   # 2
-    asm_file.write("  sbis PINB, 2\n")
-    asm_file.write("  cbi PORTB, 3\n")
-    for _ in range(640//cpp + 16//cpp - 4):
+    asm_file.write("  sbis PINB, 2\n")    # 1/2
+    asm_file.write("  rjmp no_char\n")    # 2
+    asm_file.write("  ser r17\n")         # 1
+    asm_file.write("  sts 0x100, r17\n")  # 2
+    asm_file.write("  rjmp char_done\n")  # 2
+    asm_file.write("no_char:\n")
+    asm_file.write("  nop\n")
+    asm_file.write("  nop\n")
+    asm_file.write("  nop\n")
+    asm_file.write("  nop\n")
+    asm_file.write("char_done:\n")
+    for _ in range(640//cpp + 16//cpp - 7):
         asm_file.write("  nop\n")
     # 64 pixel sync pulse
     asm_file.write("  cbi PORTB, 0\n")  # Start the horizontal pulse
