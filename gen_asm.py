@@ -18,11 +18,19 @@ with open("out.asm", 'w+') as asm_file:
     asm_file.write("  sbi DDRB, 1\n")  # Pin 9 for vertical sync
     asm_file.write("  cbi DDRB, 2\n")  # Pin 10 for button input
     asm_file.write("  cbi DDRB, 3\n")  # Pin 11 for button input
+    asm_file.write("  sbi DDRB, 4\n")
+    asm_file.write("  sbi DDRB, 5\n")
+    asm_file.write("  sbi DDRB, 6\n")
+    asm_file.write("  sbi DDRB, 7\n")
     # Both sync pulses have negative polarity
     asm_file.write("  sbi PORTB, 0\n")
     asm_file.write("  sbi PORTB, 1\n")
     asm_file.write("  sbi PORTB, 2\n")  # Pullup resistor
     asm_file.write("  sbi PORTB, 3\n")  # Pullup resistor
+    asm_file.write("  cbi PORTB, 4\n")
+    asm_file.write("  cbi PORTB, 5\n")
+    asm_file.write("  cbi PORTB, 6\n")
+    asm_file.write("  cbi PORTB, 7\n")
     cpp = 2  # Cycles per pixel
     loop_time = 4  # How many cycles is our inner pixel loop?
     stretch = loop_time * cpp  # Total stretch factor
