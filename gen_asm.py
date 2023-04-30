@@ -17,12 +17,12 @@ with open("out.asm", 'w+') as asm_file:
     asm_file.write("  sbi DDRB, 0\n")  # Pin 8 for horizontal sync
     asm_file.write("  sbi DDRB, 1\n")  # Pin 9 for vertical sync
     asm_file.write("  cbi DDRB, 2\n")  # Pin 10 for button input
-    asm_file.write("  sbi DDRB, 3\n")  # Pin 11 for LED output
+    asm_file.write("  cbi DDRB, 3\n")  # Pin 11 for button input
     # Both sync pulses have negative polarity
     asm_file.write("  sbi PORTB, 0\n")
     asm_file.write("  sbi PORTB, 1\n")
     asm_file.write("  sbi PORTB, 2\n")  # Pullup resistor
-    asm_file.write("  cbi PORTB, 3\n")
+    asm_file.write("  sbi PORTB, 3\n")  # Pullup resistor
     cpp = 2  # Cycles per pixel
     loop_time = 4  # How many cycles is our inner pixel loop?
     stretch = loop_time * cpp  # Total stretch factor
@@ -83,17 +83,28 @@ with open("out.asm", 'w+') as asm_file:
     # First line
     # 640 pixel visible area + 16 pixel front porch
     asm_file.write("  sbis PINB, 2\n")    # 1/2
-    asm_file.write("  rjmp no_char\n")    # 2
+    asm_file.write("  rjmp no_char_1\n")    # 2
     asm_file.write("  ser r17\n")         # 1
     asm_file.write("  sts 0x100, r17\n")  # 2
-    asm_file.write("  rjmp char_done\n")  # 2
-    asm_file.write("no_char:\n")
+    asm_file.write("  rjmp char_done_1\n")  # 2
+    asm_file.write("no_char_1:\n")
     asm_file.write("  nop\n")
     asm_file.write("  nop\n")
     asm_file.write("  nop\n")
     asm_file.write("  nop\n")
-    asm_file.write("char_done:\n")
-    for _ in range(640//cpp + 16//cpp - 7):
+    asm_file.write("char_done_1:\n")
+    asm_file.write("  sbis PINB, 3\n")
+    asm_file.write("  rjmp no_char_2\n")
+    asm_file.write("  clr r17\n")
+    asm_file.write("  sts 0x100, r17\n")
+    asm_file.write("  rjmp char_done_2\n")
+    asm_file.write("no_char_2:\n")
+    asm_file.write("  nop\n")
+    asm_file.write("  nop\n")
+    asm_file.write("  nop\n")
+    asm_file.write("  nop\n")
+    asm_file.write("char_done_2:\n")
+    for _ in range(640//cpp + 16//cpp - 14):
         asm_file.write("  nop\n")
     # 64 pixel sync pulse
     asm_file.write("  cbi PORTB, 0\n")  # Start the horizontal pulse
